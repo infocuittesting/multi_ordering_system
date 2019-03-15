@@ -1,4 +1,4 @@
-web: gunicorn MOS_ROOT:app
+web: gunicorn MOS_ROOT:mos
 
 worker: gunicorn Configure_Alexa_With_Department.py
 worker: gunicorn Configure_Department.py
