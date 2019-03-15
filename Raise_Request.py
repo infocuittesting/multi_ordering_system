@@ -22,6 +22,7 @@ def Raise_Request(request):
         print(d)
         gensql('insert','requests',d)
         return (json.dumps({"Return": "Record Inserted Successfully","ReturnCode": "RIS","Status": "Success","StatusCode": "200"},indent=2))
+
     elif request.method == 'PUT':
         d = request.json
         dbput("update requests set read_status_id = '1',request_status_id = '2' where ticket_no = '"+str(d['ticket_no'])+"'")
@@ -31,8 +32,10 @@ def Raise_Request(request):
         d['request_status_id'] = '2'
         gensql('insert','requests_log',d)
         return (json.dumps({"Return": "Record Updated Successfully","ReturnCode": "RUS","Status": "Success","StatusCode": "200"},indent=4))
-
-
+    else:
+		
+      return (json.dumps({"Return": "Request Not Processed","ReturnCode": "RNP","Status": "Failure","StatusCode": "200"},indent=4))
+   
 def Query_Request(request):
     if request.method == 'GET':
         
