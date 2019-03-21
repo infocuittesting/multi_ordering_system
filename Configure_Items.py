@@ -3,6 +3,7 @@ from Fetch_Current_Datetime import *
 import random
 def Insert_Configure_Items(request):
     d = request.json
+    d['item_name']=d['item_name'].title()
     d['item_code'] = random.randint(1000,9999)
     d['item_create_on']=application_datetime()
     gensql('insert','configure_items',d)     
