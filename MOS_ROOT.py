@@ -91,10 +91,10 @@ def queryrequest():
 @mos.route("/Query_Requests_Activity_Log",methods=['GET','POST'])
 def queryrequestlog():
     return (Query_Requests_Log(request))
-@mos.route("/Query_Multi_Ordring_System_Report",methods=['POST'])
-def queryreports():
-    return (Query_All_Reports(request))
 
+@mos.route("/Query_Between_Date_Record",methods=['POST'])
+def betweendaterecord():
+    return Query_Rangefrom_betweendate(request)
 #-----------------------Report----------------
 
 @mos.route("/Query_Multi_Ordring_System_Report",methods=['POST'])
