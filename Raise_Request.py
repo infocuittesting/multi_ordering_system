@@ -14,12 +14,13 @@ def Raise_Request(request):
         datetime_field = application_datetime()
         d['room_no'] = json.loads(dbget("select room_id from configure_alexa where alexa_app_id= '"+str(d['alexa_app_id'])+"'"))[0]['room_id']
         d['current_datetime']=(datetime_field.strftime("%Y-%m-%d %H:%M:%S"))
-        get_items = json.loads(dbget("select * from configure_items where item_name = '"+str(d['request'])+"'"))
-        d['department_no'] = get_items[0]['respective_dept_id']
-        d['request_no'] =  get_items[0]['item_code']
+        var = d['user_intent_id'].split("-")
+        #get_items = json.loads(dbget("select * from configure_items where item_name = '"+str(d['request'])+"'"))
+        d['department_no'] = var[1]
+        d['request_no'] =  var[0]
         ticket_no = str((datetime_field).strftime("%Y-%m-%d%H:%M:%S"))+str(d['room_no'])+str(d['department_no'])+str(d['request_no'])
         d['ticket_no'] = re.sub("-|:","",ticket_no)
-        d = {k:v  for k,v in d.items() if k not in ('alexa_app_id')}
+        d = {k:v  for k,v in d.items() if k not in ('alexa_app_id','user_intent_id')}
         print(d)
         gensql('insert','requests',d)
         return (json.dumps({"Return": "Record Inserted Successfully","ReturnCode": "RIS","Status": "Success","StatusCode": "200"},indent=2))
@@ -39,17 +40,22 @@ def Raise_Request(request):
 def Query_Request(request):
     if request.method == 'GET':
         
-        all_data =  json.loads(dbget("	select date(current_datetime),configure_alexa.alexa_app_id,read_status_id.read_status,request_status_id.request_status,* from requests \
+        all_data =  json.loads(dbget("	select configure_items.item_name,department.department_name,date(current_datetime),configure_alexa.alexa_app_id,read_status_id.read_status,request_status_id.request_status,* from requests \
 	left join read_status_id on read_status_id.read_status_id = requests.read_status_id \
 	left join request_status_id on request_status_id.request_status_id = requests.request_status_id \
-	left join configure_alexa on configure_alexa.room_id = requests.room_no"))
+	left join configure_alexa on configure_alexa.room_id = requests.room_no\
+	left join department on department.department_code = requests.department_no \
+        left join configure_items on configure_items.item_code = requests.request_no"))
         return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":all_data,"Status": "Success","StatusCode": "200"},indent=4))
     elif request.method == 'POST':
        today_date = application_datetime().strftime('%Y-%m-%d') 
-       all_datas = json.loads(dbget("select date(current_datetime),configure_alexa.alexa_app_id,read_status_id.read_status,request_status_id.request_status,* from requests \
+       all_datas = json.loads(dbget("select configure_items.item_name,department.department_name,date(current_datetime),configure_alexa.alexa_app_id,read_status_id.read_status,request_status_id.request_status,* from requests \
 	left join read_status_id on read_status_id.read_status_id = requests.read_status_id \
 	left join request_status_id on request_status_id.request_status_id = requests.request_status_id \
-	left join configure_alexa on configure_alexa.room_id = requests.room_no where date(current_datetime)='"+str(today_date)+"' and requests.read_status_id  = 2"))
+	left join configure_alexa on configure_alexa.room_id = requests.room_no\
+	left join department on department.department_code = requests.department_no \
+        left join configure_items on configure_items.item_code = requests.request_no \
+          where date(current_datetime)='"+str(today_date)+"' and requests.read_status_id  = 2"))
        return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":all_datas,"Status": "Success","StatusCode": "200"},indent=4))
 def Query_Requests_Log(request):
       if request.method == 'GET':
@@ -66,3 +72,41 @@ def Query_Requests_Log(request):
                                        left join requests on requests.ticket_no = requests_log.ticket_no where requests_log.employee_email = '"+str(d['employee_email'])+"'"))
          
           return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":ALL_DATAs,"Status": "Success","StatusCode": "200"},indent=4))
+def Query_Rangefrom_betweendate(request):
+    d = request.json
+    all_datas = json.loads(dbget("select configure_items.item_name,department.department_name,date(current_datetime),configure_alexa.alexa_app_id,read_status_id.read_status,request_status_id.request_status,* from requests \
+	left join read_status_id on read_status_id.read_status_id = requests.read_status_id \
+	left join request_status_id on request_status_id.request_status_id = requests.request_status_id \
+	left join configure_alexa on configure_alexa.room_id = requests.room_no\
+	left join department on department.department_code = requests.department_no \
+        left join configure_items on configure_items.item_code = requests.request_no \
+          where date(current_datetime) between '"+str(d['from_date'])+"' and '"+str(d['to_date'])+"'"))
+    va,sa,la = [],[],[]
+    for returnva in all_datas:
+
+       if returnva['department_name'] in va:
+           pass
+       else:
+           va.append(returnva['department_name'])
+           sa.append({"department_name":returnva['department_name']})
+    #print(va)
+    #print(sa)
+    mas = []
+ 
+
+    for returnva in all_datas:
+       for vas in sa:
+           #print(vas.get('department_name'),returnva.get('  '))
+           if returnva.get('department_name') in va:
+               mas.append(returnva)
+               vas['details'] = mas
+    for sas in sa:
+      #for d in sas['details']:
+          #print("**********",sas['department_name'])
+          res = list(filter(lambda i: i['department_name'] == sas['department_name'], sas['details'])) 
+          sas['details'] = res
+          sas['Total_Ticket'] = len(sas['details'])
+          sas['unsloved_ticket'] = len(list(filter(lambda i: i['request_status'] == 'REQUESTED', sas['details'])))
+          sas['solved_ticket']  = len(list(filter(lambda i: i['request_status'] == 'COMPLETED', sas['details'])))
+    return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":sa,"Status": "Success","StatusCode": "200"},indent=4))
+
