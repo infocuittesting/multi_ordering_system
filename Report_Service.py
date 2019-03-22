@@ -28,7 +28,7 @@ def Query_All_Reports(request):
             
 
     #Room based Report
-    Room_based = json.loads(dbget("select room_no, count(request) from requests \
+    Room_based = json.loads(dbget("select room_no, count(*) from requests \
       where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' group by room_no"))
     
     #department based request count
