@@ -53,8 +53,6 @@ def Select_Configure_Items(request):
         print("delete working")
         dbput("delete from configure_items where item_code = '"+str(d['item_code'])+"';")
     return(json.dumps({"Return": "Record Deleted Successfully","ReturnCode": "RDS","Status": "Success","StatusCode": "200"},indent=4))
-))
-
 def Delete_Items(request):
     d = request.json
     print("delete working")
