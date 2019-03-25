@@ -78,7 +78,9 @@ def updatefooditems():
 @mos.route("/Configure_Select_Items",methods=['GET','POST','DELETE'])
 def selectallitems():
     return (Select_Configure_Items(request))
-
+@mos.route("/Delete_Food_Items",methods=['POST'])
+def deleteitems():
+    return (Delete_Items(request))
 #-----------------------Raise Request---------------
 @mos.route("/Raise_Request",methods=['POST','PUT'])
 def guestrequest():
