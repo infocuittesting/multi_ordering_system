@@ -1,7 +1,7 @@
 from sqlwrapper import *
 def Query_All_Reports(request):
     d = request.json
-    request_based_reports = []
+    request_based_reports,results_record = [],[]
     #Request Based report
     request_based = json.loads(dbget("select date(current_datetime), (select count(request_status_id) from requests where request_status_id = 1  ) as requestcount,\
 	(select count(request_status_id) from requests where request_status_id = 2  ) as completecount\
@@ -13,7 +13,7 @@ def Query_All_Reports(request):
     print(delta.days)
     for request_rep in request_based:
         for i in range(delta.days + 1):
-            #print(i)
+            print(request_rep['date'])
             #print(from_date + datetime.timedelta(i))
             if request_rep['date'] == str(from_date + datetime.timedelta(i)):
                  request_based_reports.append({"date":(from_date + datetime.timedelta(i)).strftime('%b %d'),
@@ -40,6 +40,14 @@ def Query_All_Reports(request):
     device_based_reports = json.loads(dbget("select configure_alexa.alexa_app_id, count(*) from requests \
 	  left join configure_alexa on configure_alexa.room_id = requests.room_no \
 	  where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' group by alexa_app_id"))
+    if len(device_based_reports) == 0:
+        pass
+    else:
+        
+        devicess = 0
+        for devs in device_based_reports:
+            devicess += 1
+            results_record.append({"device":"device"+str(devicess),"alexa_app_id":devs['alexa_app_id'],"count":devs['count']})
     #reminder based report
 
     reimnder_record = json.loads(dbget("select department_name,(select count(reminder_count) from requests where reminder_count = 1  ) as reminderone,(select count(reminder_count) from requests where reminder_count = 2  ) as remindertwo from  requests \
@@ -58,7 +66,7 @@ def Query_All_Reports(request):
                         "Request_based_report":request_based_reports,
                         "Room_based_report":Room_based,
                         "Dept_based_report":Department_based,
-                        "Device_based_report":device_based_reports,
+                        "Device_based_report":results_record,
                         "Reminder_based_report":reimnder_record,
                         "Escalation_based_report":escalation_record,
                         "Status": "Success","StatusCode": "200"},indent=4))
