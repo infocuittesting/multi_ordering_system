@@ -97,6 +97,9 @@ def queryrequestlog():
 @mos.route("/Query_Between_Date_Record",methods=['POST'])
 def betweendaterecord():
     return Query_Rangefrom_betweendate(request)
+@mos.route("/Close_Request_From_Voice",methods=['POST'])
+def closingrequest():
+    return Close_Request_From_Voice(request)
 #-----------------------Report----------------
 
 @mos.route("/Query_Multi_Ordring_System_Report",methods=['POST'])
