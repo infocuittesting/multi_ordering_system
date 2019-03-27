@@ -110,3 +110,20 @@ def Query_Rangefrom_betweendate(request):
           sas['solved_ticket']  = len(list(filter(lambda i: i['request_status'] == 'COMPLETED', sas['details'])))
     return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":sa,"Status": "Success","StatusCode": "200"},indent=4))
 
+def Close_Request_From_Voice(request):
+ try:
+    d = request.json
+    var = d['request_id'].split("-")
+    d['request_no'] = var[0]
+    datetime_field = (application_datetime()).strftime("%Y-%m-%d")
+    GET_Request = json.loads(dbget("select * from requests where room_no = '"+str(d['room_no'])+"'\
+                                    and request_no = '"+d['request_no']+"' and date(current_datetime) = '"+str(datetime_field)+"'"))
+    if len(GET_Request) == 0:
+        return (json.dumps({"Return": "Record Failure","ReturnCode": "RF","Status": "Success","StatusCode": "200"},indent=4))
+    else:
+        final = GET_Request[-1]
+        print(final)
+        dbput("update requests set read_status_id='1',request_status_id='2' where ticket_no = '"+str(final['ticket_no'])+"'")
+        return (json.dumps({"Return": "Record Updated Successfully","ReturnCode": "RUS","Status": "Success","StatusCode": "200"},indent=4))
+ except:
+    return (json.dumps({"Return": "Record Failure","ReturnCode": "RF","Status": "Success","StatusCode": "200"},indent=4))
