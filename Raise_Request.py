@@ -84,27 +84,25 @@ def Query_Rangefrom_betweendate(request):
     va,sa,la = [],[],[]
     for returnva in all_datas:
 
-       if returnva['department_name'] in va:
-           pass
-       else:
+       if returnva['department_name'] not in va:
+      
+    
            va.append(returnva['department_name'])
-           sa.append({"department_name":returnva['department_name']})
-    #print(va)
-    #print(sa)
-    mas = []
+           sa.append({"department_name":returnva['department_name'],"details":[]})
+
  
 
     for returnva in all_datas:
        for vas in sa:
-           #print(vas.get('department_name'),returnva.get('  '))
-           if returnva.get('department_name') in va:
-               mas.append(returnva)
-               vas['details'] = mas
+           
+           if vas['department_name'] == returnva['department_name']:
+          
+               vas['details'].append(returnva) 
     for sas in sa:
       #for d in sas['details']:
           #print("**********",sas['department_name'])
-          res = list(filter(lambda i: i['department_name'] == sas['department_name'], sas['details'])) 
-          sas['details'] = res
+          #res = list(filter(lambda i: i['department_name'] == sas['department_name'], sas['details'])) 
+          #sas['details'] = res
           sas['Total_Ticket'] = len(sas['details'])
           sas['unsloved_ticket'] = len(list(filter(lambda i: i['request_status'] == 'REQUESTED', sas['details'])))
           sas['solved_ticket']  = len(list(filter(lambda i: i['request_status'] == 'COMPLETED', sas['details'])))
