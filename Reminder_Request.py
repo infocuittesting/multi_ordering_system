@@ -3,8 +3,8 @@ from sqlwrapper import *
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from apscheduler.schedulers.blocking import BlockingScheduler
-sched = BlockingScheduler()
+#from apscheduler.schedulers.blocking import BlockingScheduler
+#sched = BlockingScheduler()
 def sendemailadmin(get_employee,msges):
                  #email = ['infocuit.daisy@gmail.com','infocuit.aravindh@gmail.com']
                  name = "daisy"
@@ -76,7 +76,7 @@ def sendemailadmin(get_employee,msges):
                       print ("the message has been sent successfully")
                       server.quit()
 
-@sched.scheduled_job('interval', seconds=30)
+#@sched.scheduled_job('interval', seconds=30)
 def timed_job():
    string,string1,esca_string,esca_string1 = '','','',''
    today_date = application_datetime().strftime('%Y-%m-%d')
@@ -173,5 +173,6 @@ def timed_job():
          #print(current.strftime('%M'), type(current.strftime('%M')))
    else:
            pass
-sched.start()
+   return json.dumps({"Return":"Success"})
+#sched.start()
 

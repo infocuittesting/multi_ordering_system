@@ -6,7 +6,7 @@ CORS(mos)
 from Configure_Alexa_With_Department import *
 from Configure_Department import *
 from Configure_Items import *
-
+from Reminder_Request import *
 #-------------Signup----------------------------------------
 from Employee_Signup import *
 #----------------Raise Request------------------------------
@@ -100,6 +100,10 @@ def betweendaterecord():
 @mos.route("/Close_Request_From_Voice",methods=['POST'])
 def closingrequest():
     return Close_Request_From_Voice(request)
+
+@mos.route("/Schedule_time_Job",methods=['GET'])
+def schedulejob():
+    return timed_job()
 #-----------------------Report----------------
 
 @mos.route("/Query_Multi_Ordring_System_Report",methods=['POST'])
