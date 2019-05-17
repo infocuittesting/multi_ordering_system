@@ -6,7 +6,7 @@ CORS(mos)
 from Configure_Alexa_With_Department import *
 from Configure_Department import *
 from Configure_Items import *
-#from Reminder_Request import *
+from Reminder_Request import *
 #-------------Signup----------------------------------------
 from Employee_Signup import *
 #----------------Raise Request------------------------------
