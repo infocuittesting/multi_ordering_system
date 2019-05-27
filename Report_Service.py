@@ -23,18 +23,19 @@ def Query_All_Reports(request):
             #print(request_rep['date'])
             print(from_date + datetime.timedelta(i))
            
-            request_based_reports.append({"date":str(from_date + datetime.timedelta(i)),
+            request_based_reports.append({"date":(from_date + datetime.timedelta(i)).strftime('%b %d'),
+                                          "match_date":str(from_date + datetime.timedelta(i)),
                                           "request_count":0,
                                         "complete_count":0
                                         })
     for req_base in request_based_reports:
         for s in request_based:
-            if req_base['date'] == s['date']:
+            if req_base['match_date'] == s['date']:
                 req_base['request_count']=s['requestcount']
     for req_base in request_based_reports:
         for l in compllete_based:
             
-            if req_base['date'] ==l['date']:
+            if req_base['match_date'] ==l['date']:
                 req_base['complete_count']=l['completecount']
                 
     #Room based Report
