@@ -11,6 +11,7 @@ def Query_All_Reports(request):
 	from requests \
      where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' and request_status_id = 2  group by date(current_datetime) order by date(current_datetime) "))
   #  request_reports = request_based + compllete_based
+    print("issdsa")
     print(request_based)
     from_date = datetime.datetime.strptime(d['datefrom'], '%Y-%m-%d').date()
     to_date=datetime.datetime.strptime(d['dateto'], '%Y-%m-%d').date()
