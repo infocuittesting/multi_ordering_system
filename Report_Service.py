@@ -1,32 +1,42 @@
+
 from sqlwrapper import *
 def Query_All_Reports(request):
     d = request.json
     request_based_reports,results_record = [],[]
     #Request Based report
-    request_based = json.loads(dbget("select date(current_datetime), (select count(request_status_id) from requests where request_status_id = 1  ) as requestcount,\
-	(select count(request_status_id) from requests where request_status_id = 2  ) as completecount\
+    request_based = json.loads(dbget("select date(current_datetime),count(*) as requestcount,0 as  completecount\
 	from requests \
-      where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' group by room_no,date(current_datetime) order by date(current_datetime) "))
+      where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' and request_status_id = 1  group by date(current_datetime) order by date(current_datetime) "))
+    compllete_based =json.loads(dbget("select date(current_datetime),count(*) as completecount,0 as  requestcount \
+	from requests \
+     where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' and request_status_id = 2  group by date(current_datetime) order by date(current_datetime) "))
+  #  request_reports = request_based + compllete_based
+    print(request_based)
     from_date = datetime.datetime.strptime(d['datefrom'], '%Y-%m-%d').date()
     to_date=datetime.datetime.strptime(d['dateto'], '%Y-%m-%d').date()
     delta = to_date - from_date         # timedelta
     print(delta.days)
-    for request_rep in request_based:
-        for i in range(delta.days + 1):
-            print(request_rep['date'])
-            #print(from_date + datetime.timedelta(i))
-            if request_rep['date'] == str(from_date + datetime.timedelta(i)):
-                 request_based_reports.append({"date":(from_date + datetime.timedelta(i)).strftime('%b %d'),
-                                        "request_count":request_rep['requestcount'],
-                                        "complete_count":request_rep['completecount']
-                                        })
-            else:
-                   request_based_reports.append({"date":(from_date + datetime.timedelta(i)).strftime('%b %d'),
-                                        "request_count":0,
+    
+    
+    for i in range(delta.days + 1):
+        
+            #print(request_rep['date'])
+            print(from_date + datetime.timedelta(i))
+           
+            request_based_reports.append({"date":str(from_date + datetime.timedelta(i)),
+                                          "request_count":0,
                                         "complete_count":0
-                                        })                    
+                                        })
+    for req_base in request_based_reports:
+        for s in request_based:
+            if req_base['date'] == s['date']:
+                req_base['request_count']=s['requestcount']
+    for req_base in request_based_reports:
+        for l in compllete_based:
             
-
+            if req_base['date'] ==l['date']:
+                req_base['complete_count']=l['completecount']
+                
     #Room based Report
     Room_based = json.loads(dbget("select room_no, count(*) from requests \
       where date(current_datetime) between '"+d['datefrom']+"' and '"+d['dateto']+"' group by room_no"))
