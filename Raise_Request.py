@@ -80,7 +80,7 @@ def Query_Rangefrom_betweendate(request):
 	left join configure_alexa on configure_alexa.room_id = requests.room_no\
 	left join department on department.department_code = requests.department_no \
         left join configure_items on configure_items.item_code = requests.request_no \
-          where date(current_datetime) between '"+str(d['from_date'])+"' and '"+str(d['to_date'])+"'"))
+          where date(current_datetime) between '"+str(d['from_date'])+"' and '"+str(d['to_date'])+"' order by current_datetime"))
     va,sa,la = [],[],[]
     for returnva in all_datas:
 
