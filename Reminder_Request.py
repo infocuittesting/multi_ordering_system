@@ -6,17 +6,25 @@ from email.mime.multipart import MIMEMultipart
 #from apscheduler.schedulers.blocking import BlockingScheduler
 #sched = BlockingScheduler()
 def sendemailadmin(get_employee,msges):
+                 print("hiiiiiiiii")
                  #email = ['infocuit.daisy@gmail.com','infocuit.aravindh@gmail.com']
-                 name = "daisy"
+                 name = "Hotel Manager"
                  print("message",msges)
                  message = "hotels"
                  conf_no = "343243245"
-                 hotel_name = "SMARTMO"
+                 hotel_name = 'Quality in'
+                 address = 'Chennai'
+                 state = 'Tamilnadu'
+                 country = 'India'
+                 email = 'sedwe@gmail.com'
+                 mobile1 = '9878909890'
+                 mobile2 = '7898765678'
                  arrival = "mar 3"
                  depature = "mar 4"
                  room_type ="delux"
                  id1 = "324"
                  book_date = "2019-02-13"
+                 
                  #print("daisy","infocuit.aravindh@gmail.com",type(email),"eruma suhutup","98789098","mar 2","mar 3", "delux")
                  sender = "infocuit.testing@gmail.com"
                  ids = id1
@@ -38,26 +46,27 @@ def sendemailadmin(get_employee,msges):
                       </head>
                       <body>
                       <dl>
-                      <dt>
-                      <pre>
-               
-                      
-                      <font size="4" color="black">Dear """+name+""",</font>
-                      <font size="4" color="black">      We are delighted that you have selected our """""" On behalf of the entire team at the 
-                  ,extend you a very welcome and trust stay with us will be both enjoyable and comfortable
-                    offers a selection of business services and facilities.which are detailed in the booklet,
-                   placed on the writing table in your room.Should you require any assistance or have any specific
-                   requirements,please do not hesitate to contact me extension(999).</font>
-                       </pre>
-                 <pre>
-                      <font size="4" color="blue">Confirmation Number: """+conf_no+"""</font>
-                      <font size="4" color="blue">Arrival Date: """+arrival+"""</font>
-                      <font size="4" color="blue">Depature Date: """+depature+"""</font>
-                      <font size="4" color="blue">Room Type: """+room_type+"""</font>
+                      <font size="3" color="black">Dear """+name+""",</font>
+                      <dd><p><font size="3" color="black">I am writing this letter to inform you about delay request from multi ordering system.
+                      Please take the action immediately, to close the guest request.
+                      </font></p></dd>
+                       
                      
-
-                      <font size="4" color="black">With best regards / Yours sincerely,</font>
-                      <font size="4" color="black">Hotel Manager</font></pre>
+                     
+                     <dd>     
+                     <font size="3" color="black">With best regards / Yours sincerely,</font></dd>
+                     <dd>
+                     <dd><font size="3" color="black">Hotel Manager</font></dt></dd>
+                     
+                     <dd>
+                     <font size="3" color="black">Address:</font></dd>
+                     <dd><font size="2.5" color="blue">"""+hotel_name+"""</font></dd>
+                     <dd><font size="2.5" color="blue"> """+address+"""</font></dd>
+                     <dd><font size="2.5" color="blue">"""+state+"""</font></dd>
+                     <dd><font size="2.5" color="blue">"""+country+"""</font></dd>
+                     <dd><font size="2.5" color="blue">"""+email+"""</font></dd>
+                     <dd><font size="2.5" color="blue">"""+str(mobile1)+"""</font></dd>
+                     <dd><font size="2.5" color="blue">"""+str(mobile2)+"""</font></dd>
                         
                       </dl>        
                       </body>
@@ -105,6 +114,7 @@ def timed_job():
 	                      where employee_dept_id in ("+str(query_reminder['department_no'])+")"))
                      
                    message = "reminder 1"
+                   
                    var = sendemailadmin(get_employee,message)
            elif 20 <= minutes < 30 :
                if query_reminder['reminder_count'] ==1:

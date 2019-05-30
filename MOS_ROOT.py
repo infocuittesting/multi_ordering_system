@@ -1,3 +1,4 @@
+
 from flask import Flask,request
 from flask_cors import CORS
 mos = Flask(__name__) #here i set environment varible for flask framework web application
