@@ -12,7 +12,7 @@ def Raise_Request(request):
         d['reminder_count'] = 0
         d['escalation_count'] = 0
         datetime_field = application_datetime()
-        d['room_no'] = json.loads(dbget("select room_id from configure_alexa where alexa_app_id= '"+str(d['alexa_app_id'])+"'"))[0]['room_id']
+        d['room_no'] = d['alexa_app_id']
         d['current_datetime']=(datetime_field.strftime("%Y-%m-%d %H:%M:%S"))
         var = d['user_intent_id'].split("-")
         #get_items = json.loads(dbget("select * from configure_items where item_name = '"+str(d['request'])+"'"))
