@@ -45,7 +45,7 @@ def Query_Request(request):
 	left join request_status_id on request_status_id.request_status_id = requests.request_status_id \
 	left join configure_alexa on configure_alexa.room_id = requests.room_no\
 	left join department on department.department_code = requests.department_no \
-        left join configure_items on configure_items.item_code = requests.request_no"))
+        left join configure_items on configure_items.item_code = requests.request_no order by current_datetime"))
         return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":all_data,"Status": "Success","StatusCode": "200"},indent=4))
     elif request.method == 'POST':
        today_date = application_datetime().strftime('%Y-%m-%d') 
@@ -55,7 +55,7 @@ def Query_Request(request):
 	left join configure_alexa on configure_alexa.room_id = requests.room_no\
 	left join department on department.department_code = requests.department_no \
         left join configure_items on configure_items.item_code = requests.request_no \
-          where date(current_datetime)='"+str(today_date)+"' and requests.read_status_id  = 2"))
+          where date(current_datetime)='"+str(today_date)+"' and requests.read_status_id  = 2 order by current_datetime"))
        return (json.dumps({"Return": "Record Retrived Successfully","ReturnCode": "RRS","Returnvalue":all_datas,"Status": "Success","StatusCode": "200"},indent=4))
 def Query_Requests_Log(request):
       if request.method == 'GET':
