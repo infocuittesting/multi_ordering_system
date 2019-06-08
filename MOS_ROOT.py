@@ -110,5 +110,9 @@ def schedulejob():
 @mos.route("/Query_Multi_Ordring_System_Report",methods=['POST'])
 def queryreports():
     return (Query_All_Reports(request))
+
+@mos.route("/Alexa_Notification",methods=['POST'])
+def notification():
+    return Alexa_Notification(request)
 if __name__ == "__main__":
     mos.run(host ='192.168.99.1',port =5000)#run web application
