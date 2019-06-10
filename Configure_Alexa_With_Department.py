@@ -56,7 +56,10 @@ def Alexa_Notification(request):
    print(token_res['access_token'])
    request_header={'Authorization': 'Bearer {}'.format(token_res['access_token']),"Content-Type":"application/json"}
     
-   api_url='https://api.amazonalexa.com/v1/proactiveEvents/stages/development'
+   if d['room_no']=='100':
+       api_url='https://api.amazonalexa.com/v1/proactiveEvents/stages/development'
+   else:
+       api_url='https://api.eu.amazonalexa.com/v1/proactiveEvents/stages/development'
 
 
 
