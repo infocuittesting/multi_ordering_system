@@ -28,8 +28,8 @@ def Query_All_Reports(request):
                                           "match_date":str(from_date + datetime.timedelta(i)),
                                           "units":0,
                                           "pie":[{
-                                          "request_count":0,"title":"not completed"},{
-                                        "complete_count":0,"title":"completed"}]
+                                          "value":0,"title":"not completed"},{
+                                        "value":0,"title":"completed"}]
                                         })
     for req_base in request_based_reports:
         for s in request_based:
@@ -37,7 +37,7 @@ def Query_All_Reports(request):
              req_base['units']=s['requestcount']
              for l in req_base['pie']:
                 if l['title'] == 'not completed':
-                    l['request_count']=s['requestcount']
+                    l['value']=s['requestcount']
     for req_base in request_based_reports:
         for l in compllete_based:
             
@@ -45,7 +45,7 @@ def Query_All_Reports(request):
                req_base['units'] = req_base['units'] + l['completecount']
                for s in req_base['pie']:
                     if s['title'] == 'completed':
-                        s['complete_count']=l['completecount']
+                        s['value']=l['completecount']
     
     for x in request_based_reports:
         del x['match_date']
